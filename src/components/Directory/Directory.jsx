@@ -1,5 +1,5 @@
 import React from 'react';
-import MenuItem from '../menuItem/MenuItem';
+import MenuItem from '../MenuItem/MenuItem';
 import './Directory.styles.scss';
 
 const sections = [
