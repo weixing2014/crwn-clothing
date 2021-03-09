@@ -4,7 +4,10 @@ import HomePage from './pages/Homepage/Homepage.component';
 import ShopPage from './pages/Shop/Shop.component';
 import Header from './components/Header/header.component';
 import SignInAndSignUpPage from './pages/SignInAndSignUp/SignInAndSignUp.component';
-import { auth } from './firebase/firebase.utils';
+import {
+  auth,
+  getOrCreateUserProfileDocument,
+} from './firebase/firebase.utils';
 import { Component } from 'react';
 
 class App extends Component {
@@ -15,11 +18,38 @@ class App extends Component {
     };
   }
 
+  unsubscribeFromAuth = null;
+
   componentDidMount() {
-    auth.onAuthStateChanged((user) => {
-      this.setState({ currentUser: user });
-      console.log(user);
+    // Pass in a callback function to auth.onAuthStateChanged
+    // So whenever the auth state changes the function will be triggered
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
+      if (userAuth) {
+        const userRef = await getOrCreateUserProfileDocument(userAuth);
+
+        // Listen to the user document mutations
+        userRef.onSnapshot((snapshot) => {
+          this.setState(
+            {
+              currentUser: {
+                id: snapshot.id,
+                ...snapshot.data(),
+              },
+            },
+            () => {
+              console.log(this.state);
+            },
+          );
+        });
+      } else {
+        // Log out
+        this.setState({ currentUser: userAuth });
+      }
     });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFromAuth();
   }
 
   render() {
