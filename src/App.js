@@ -1,5 +1,5 @@
 import './App.css';
-import { Switch, Route, Link } from 'react-router-dom';
+import { withRouter, Switch, Route, Link } from 'react-router-dom';
 import HomePage from './pages/Homepage/Homepage.component';
 import ShopPage from './pages/Shop/Shop.component';
 import Header from './components/Header/header.component';
@@ -37,7 +37,7 @@ class App extends Component {
               },
             },
             () => {
-              console.log(this.state);
+              this.props.history.push(`/`);
             },
           );
         });
@@ -66,4 +66,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);
