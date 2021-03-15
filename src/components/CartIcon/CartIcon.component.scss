@@ -2,8 +2,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 45px;
-  height: 45px;
   cursor: pointer;
   position: relative;
 
@@ -12,10 +10,11 @@
     height: 24px;
   }
 
+  // position: absolute will set the element based on its position: relative parent
   .item-count {
     position: absolute;
     font-size: 10px;
     font-weight: bold;
-    bottom: 12px;
+    bottom: 2px;
   }
 }
