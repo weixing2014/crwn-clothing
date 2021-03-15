@@ -1,5 +1,4 @@
-// Actions
-export const SET_CURRENT_USER = 'SET_CURRENT_USER';
+import { SET_CURRENT_USER } from './user.actions';
 
 const INITIAL_STATE = {
   currentUser: null,

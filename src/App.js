@@ -1,5 +1,6 @@
 import './App.css';
-import { withRouter, Switch, Route, Link } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import HomePage from './pages/Homepage/Homepage.component';
 import ShopPage from './pages/Shop/Shop.component';
 import Header from './components/Header/header.component';
@@ -9,41 +10,35 @@ import {
   getOrCreateUserProfileDocument,
 } from './firebase/firebase.utils';
 import { Component } from 'react';
+import { setCurrentUser } from './redux/user/user.actions';
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      currentUser: null,
-    };
-  }
-
   unsubscribeFromAuth = null;
 
   componentDidMount() {
     // Pass in a callback function to auth.onAuthStateChanged
     // So whenever the auth state changes the function will be triggered
+
+    const { setCurrentUser } = this.props;
+
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
+      const { history } = this.props;
+
       if (userAuth) {
         const userRef = await getOrCreateUserProfileDocument(userAuth);
 
         // Listen to the user document mutations
         userRef.onSnapshot((snapshot) => {
-          this.setState(
-            {
-              currentUser: {
-                id: snapshot.id,
-                ...snapshot.data(),
-              },
-            },
-            () => {
-              this.props.history.push(`/`);
-            },
-          );
+          setCurrentUser({
+            id: snapshot.id,
+            ...snapshot.data(),
+          });
         });
+        history.push('/');
       } else {
         // Log out
-        this.setState({ currentUser: userAuth });
+        setCurrentUser(userAuth);
+        history.push('/');
       }
     });
   }
@@ -55,7 +50,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Header currentUser={this.state.currentUser} />
+        <Header />
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route exact path="/shop" component={ShopPage} />
@@ -66,4 +61,6 @@ class App extends Component {
   }
 }
 
-export default withRouter(App);
+export default connect(null, {
+  setCurrentUser,
+})(withRouter(App));

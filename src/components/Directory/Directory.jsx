@@ -49,7 +49,7 @@ export default class Directory extends React.Component {
     return (
       <div className="directory-menu">
         {this.state.sections.map((section) => (
-          <MenuItem {...section} />
+          <MenuItem key={section.id} {...section} />
         ))}
       </div>
     );
