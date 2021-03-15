@@ -1,5 +1,5 @@
 import './App.css';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import HomePage from './pages/Homepage/Homepage.component';
 import ShopPage from './pages/Shop/Shop.component';
@@ -22,8 +22,6 @@ class App extends Component {
     const { setCurrentUser } = this.props;
 
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
-      const { history } = this.props;
-
       if (userAuth) {
         const userRef = await getOrCreateUserProfileDocument(userAuth);
 
@@ -34,11 +32,9 @@ class App extends Component {
             ...snapshot.data(),
           });
         });
-        history.push('/');
       } else {
         // Log out
         setCurrentUser(userAuth);
-        history.push('/');
       }
     });
   }
@@ -54,13 +50,28 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route exact path="/shop" component={ShopPage} />
-          <Route exact path="/signin" component={SignInAndSignUpPage} />
+          <Route
+            exact
+            path="/signin"
+            render={() =>
+              this.props.currentUser ? (
+                <Redirect to="/" />
+              ) : (
+                <SignInAndSignUpPage />
+              )
+            }
+          />
         </Switch>
       </div>
     );
   }
 }
 
-export default connect(null, {
-  setCurrentUser,
-})(withRouter(App));
+export default connect(
+  (appState) => ({
+    currentUser: appState.user.currentUser,
+  }),
+  {
+    setCurrentUser,
+  },
+)(withRouter(App));

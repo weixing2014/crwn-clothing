@@ -4,9 +4,9 @@ import './header.styles.scss';
 import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 import { auth } from '../../firebase/firebase.utils';
+import CartIcon from '../CartIcon/CartIcon.component';
 
 function Header({ currentUser }) {
-  console.log(currentUser);
   return (
     <div className="header">
       <Link className="logo-container" to="/">
@@ -25,13 +25,14 @@ function Header({ currentUser }) {
             SIGN IN
           </Link>
         )}
+        <div className="option">
+          <CartIcon />
+        </div>
       </div>
     </div>
   );
 }
 
-const mapStateToProps = (appState) => ({
+export default connect((appState) => ({
   currentUser: appState.user.currentUser,
-});
-
-export default connect(mapStateToProps)(Header);
+}))(Header);
