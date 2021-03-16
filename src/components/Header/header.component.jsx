@@ -5,8 +5,11 @@ import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 import { auth } from '../../firebase/firebase.utils';
 import CartIcon from '../CartIcon/CartIcon.component';
+import CartDropdown from '../CartDropdown/CartDropdown.component';
+import { setCurrentUser } from '../../redux/user/user.actions';
+import { toggleCartVisibility } from '../../redux/cart/cart.actions';
 
-function Header({ currentUser }) {
+function Header({ currentUser, isCartVisible, toggleCartVisibility }) {
   return (
     <div className="header">
       <Link className="logo-container" to="/">
@@ -21,7 +24,7 @@ function Header({ currentUser }) {
             <div className="option" onClick={() => auth.signOut()}>
               SIGN OUT
             </div>
-            <div className="option">
+            <div className="option" onClick={toggleCartVisibility}>
               <CartIcon />
             </div>
           </>
@@ -30,11 +33,18 @@ function Header({ currentUser }) {
             SIGN IN
           </Link>
         )}
+        {isCartVisible ? <CartDropdown /> : null}
       </div>
     </div>
   );
 }
 
-export default connect((appState) => ({
-  currentUser: appState.user.currentUser,
-}))(Header);
+export default connect(
+  (appState) => ({
+    currentUser: appState.user.currentUser,
+    isCartVisible: appState.cart.display,
+  }),
+  {
+    toggleCartVisibility,
+  },
+)(Header);
