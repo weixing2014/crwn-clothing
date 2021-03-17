@@ -1,7 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './CollectionItem.component.scss';
+import CustomButton from '../CustomButton/CustomButton.component';
+import { addItem } from '../../redux/cart/cart.actions';
 
-export default function CollectionItemComponent({ item }) {
+function CollectionItem({ item, addItem }) {
   const { imageUrl, name, price } = item;
 
   return (
@@ -11,6 +14,11 @@ export default function CollectionItemComponent({ item }) {
         <span className="name">{name}</span>
         <span className="price">{price}</span>
       </div>
+      <div className="add-to-cart">
+        <CustomButton onClick={() => addItem(item)}>Add to cart</CustomButton>
+      </div>
     </div>
   );
 }
+
+export default connect(null, { addItem })(CollectionItem);

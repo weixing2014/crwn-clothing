@@ -1,4 +1,5 @@
 .collection-item {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,5 +25,16 @@
 
   .name {
     width: 90%;
+  }
+
+  .add-to-cart {
+    position: absolute;
+    bottom: 50px;
+    visibility: hidden;
+    opacity: 0.7;
+  }
+
+  &:hover .add-to-cart {
+    visibility: visible;
   }
 }
