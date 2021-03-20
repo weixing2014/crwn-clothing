@@ -6,7 +6,6 @@ import { ReactComponent as Logo } from '../../assets/crown.svg';
 import { auth } from '../../firebase/firebase.utils';
 import CartIcon from '../CartIcon/CartIcon.component';
 import CartDropdown from '../CartDropdown/CartDropdown.component';
-import { setCurrentUser } from '../../redux/user/user.actions';
 import { toggleCartVisibility } from '../../redux/cart/cart.actions';
 
 function Header({ currentUser, isCartVisible, toggleCartVisibility }) {

@@ -24,10 +24,8 @@ class SignUp extends React.Component {
   handleSubmit = async (event) => {
     const {
       email,
-      displayName,
       password,
       confirmPassword,
-      createdAt,
     } = this.state;
 
     event.preventDefault();
@@ -81,7 +79,6 @@ class SignUp extends React.Component {
             type="email"
             handleChange={this.handleChange}
             value={this.state.email}
-            label="email"
             label="Email"
             required
           />
