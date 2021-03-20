@@ -11,6 +11,8 @@ import {
 } from './firebase/firebase.utils';
 import { Component } from 'react';
 import { setCurrentUser } from './redux/user/user.actions';
+import { selectCurrentUser } from './redux/user/user.selector';
+import CheckOutPage from "./pages/CheckOut/CheckOut.component";
 
 class App extends Component {
   unsubscribeFromAuth = null;
@@ -50,6 +52,7 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route exact path="/shop" component={ShopPage} />
+          <Route exact path="/checkout" component={CheckOutPage} />
           <Route
             exact
             path="/signin"
@@ -69,7 +72,7 @@ class App extends Component {
 
 export default connect(
   (appState) => ({
-    currentUser: appState.user.currentUser,
+    currentUser: selectCurrentUser(appState),
   }),
   {
     setCurrentUser,

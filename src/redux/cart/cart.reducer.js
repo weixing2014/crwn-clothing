@@ -2,7 +2,7 @@ import { CartActionTypes } from './cart.types';
 import { addItemToCart } from './cart.utils';
 
 const INITIAL_STATE = {
-  display: false,
+  visible: false,
   cartItems: [],
 };
 
@@ -11,7 +11,7 @@ const cartReducer = (state = INITIAL_STATE, action) => {
     case CartActionTypes.TOGGLE_CART_VISIBILITY:
       return {
         ...state,
-        display: !state.display,
+        visible: !state.visible,
       };
     case CartActionTypes.ADD_ITEM:
       return {

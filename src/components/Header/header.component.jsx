@@ -7,6 +7,8 @@ import { auth } from '../../firebase/firebase.utils';
 import CartIcon from '../CartIcon/CartIcon.component';
 import CartDropdown from '../CartDropdown/CartDropdown.component';
 import { toggleCartVisibility } from '../../redux/cart/cart.actions';
+import { selectCurrentUser } from '../../redux/user/user.selector';
+import { selectCartVisibility } from '../../redux/cart/cart.selector';
 
 function Header({ currentUser, isCartVisible, toggleCartVisibility }) {
   return (
@@ -40,8 +42,8 @@ function Header({ currentUser, isCartVisible, toggleCartVisibility }) {
 
 export default connect(
   (appState) => ({
-    currentUser: appState.user.currentUser,
-    isCartVisible: appState.cart.display,
+    currentUser: selectCurrentUser(appState),
+    isCartVisible: selectCartVisibility(appState),
   }),
   {
     toggleCartVisibility,
