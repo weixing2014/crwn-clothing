@@ -12,7 +12,7 @@ import {
 import { Component } from 'react';
 import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selector';
-import CheckOutPage from "./pages/CheckOut/CheckOut.component";
+import CheckoutPage from "./pages/Checkout/Checkout.component";
 
 class App extends Component {
   unsubscribeFromAuth = null;
@@ -52,7 +52,7 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route exact path="/shop" component={ShopPage} />
-          <Route exact path="/checkout" component={CheckOutPage} />
+          <Route exact path="/checkout" component={CheckoutPage} />
           <Route
             exact
             path="/signin"
