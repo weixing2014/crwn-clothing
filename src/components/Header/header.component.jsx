@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { connect } from 'react-redux';
 import './header.styles.scss';
 import { Link } from 'react-router-dom';
@@ -9,28 +9,32 @@ import CartDropdown from '../CartDropdown/CartDropdown.component';
 import { toggleCartVisibility } from '../../redux/cart/cart.actions';
 import { selectCurrentUser } from '../../redux/user/user.selector';
 import { selectCartVisibility } from '../../redux/cart/cart.selector';
+import { UserContext } from '../../context/user.context';
 
 function Header({ currentUser, isCartVisible, toggleCartVisibility }) {
+  const { currentUser: user } = useContext(UserContext);
+
   return (
-    <div className="header">
-      <Link className="logo-container" to="/">
-        <Logo className="logo" />
+    <div className='header'>
+      <Link className='logo-container' to='/'>
+        <Logo className='logo' />
       </Link>
-      <div className="options">
-        <Link className="option" to="/shop">
+      <div className='options'>
+        <Link className='option' to='/shop'>
           SHOP
         </Link>
-        {currentUser ? (
+        {user ? (
           <>
-            <div className="option" onClick={() => auth.signOut()}>
+            {user.email}
+            <div className='option' onClick={() => auth.signOut()}>
               SIGN OUT
             </div>
-            <div className="option" onClick={toggleCartVisibility}>
+            <div className='option' onClick={toggleCartVisibility}>
               <CartIcon />
             </div>
           </>
         ) : (
-          <Link className="option" to="/signin">
+          <Link className='option' to='/signin'>
             SIGN IN
           </Link>
         )}

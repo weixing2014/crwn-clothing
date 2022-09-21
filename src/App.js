@@ -1,33 +1,23 @@
+import React, { useContext, useEffect } from 'react';
 import './App.css';
-import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import HomePage from './pages/Homepage/Homepage.component';
 import ShopPage from './pages/Shop/Shop.component';
 import Header from './components/Header/header.component';
 import SignInAndSignUpPage from './pages/SignInAndSignUp/SignInAndSignUp.component';
-import {
-  auth,
-  getOrCreateUserProfileDocument,
-} from './firebase/firebase.utils';
-import { Component } from 'react';
-import { setCurrentUser } from './redux/user/user.actions';
-import { selectCurrentUser } from './redux/user/user.selector';
-import CheckoutPage from "./pages/Checkout/Checkout.component";
+import { auth, getOrCreateUserProfileDocument } from './firebase/firebase.utils';
+import CheckoutPage from './pages/Checkout/Checkout.component';
+import { UserContext } from './context/user.context';
 
-class App extends Component {
-  unsubscribeFromAuth = null;
+const App = () => {
+  const { currentUser, setCurrentUser } = useContext(UserContext);
+  let unsubscribeFromAuth = null;
 
-  componentDidMount() {
-    // Pass in a callback function to auth.onAuthStateChanged
-    // So whenever the auth state changes the function will be triggered
-
-    const { setCurrentUser } = this.props;
-
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
+  useEffect(() => {
+    unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
       if (userAuth) {
         const userRef = await getOrCreateUserProfileDocument(userAuth);
 
-        // Listen to the user document mutations
         userRef.onSnapshot((snapshot) => {
           setCurrentUser({
             id: snapshot.id,
@@ -35,46 +25,34 @@ class App extends Component {
           });
         });
       } else {
-        // Log out
         setCurrentUser(userAuth);
       }
     });
-  }
 
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
-  }
+    return () => unsubscribeFromAuth();
+  }, []);
 
-  render() {
-    return (
-      <div className="App">
-        <Header />
-        <Switch>
-          <Route exact path="/" component={HomePage} />
-          <Route exact path="/shop" component={ShopPage} />
-          <Route exact path="/checkout" component={CheckoutPage} />
-          <Route
-            exact
-            path="/signin"
-            render={() =>
-              this.props.currentUser ? (
-                <Redirect to="/" />
-              ) : (
-                <SignInAndSignUpPage />
-              )
-            }
-          />
-        </Switch>
-      </div>
-    );
-  }
-}
+  return (
+    <div className='App'>
+      <Header />
+      <Switch>
+        <Route exact path='/' component={HomePage} />
+        <Route exact path='/shop' component={ShopPage} />
+        <Route exact path='/checkout' component={CheckoutPage} />
+        <Route
+          exact
+          path='/signin'
+          render={() =>
+            currentUser ? (
+              <Redirect to='/' />
+            ) : (
+              <SignInAndSignUpPage />
+            )
+          }
+        />
+      </Switch>
+    </div>
+  );
+};
 
-export default connect(
-  (appState) => ({
-    currentUser: selectCurrentUser(appState),
-  }),
-  {
-    setCurrentUser,
-  },
-)(withRouter(App));
+export default App;
