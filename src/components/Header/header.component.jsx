@@ -10,9 +10,12 @@ import { toggleCartVisibility } from '../../redux/cart/cart.actions';
 import { selectCurrentUser } from '../../redux/user/user.selector';
 import { selectCartVisibility } from '../../redux/cart/cart.selector';
 import { UserContext } from '../../context/user.context';
+import { CartContext } from '../../context/cart.context';
 
-function Header({ currentUser, isCartVisible, toggleCartVisibility }) {
+function Header() {
   const { currentUser: user } = useContext(UserContext);
+  const { isCartOpen, setIsCartOpen } = useContext(CartContext);
+  const toggleCartVisibility = () => setIsCartOpen(!isCartOpen);
 
   return (
     <div className='header'>
@@ -38,18 +41,10 @@ function Header({ currentUser, isCartVisible, toggleCartVisibility }) {
             SIGN IN
           </Link>
         )}
-        {isCartVisible ? <CartDropdown /> : null}
+        {isCartOpen ? <CartDropdown /> : null}
       </div>
     </div>
   );
 }
 
-export default connect(
-  (appState) => ({
-    currentUser: selectCurrentUser(appState),
-    isCartVisible: selectCartVisibility(appState),
-  }),
-  {
-    toggleCartVisibility,
-  },
-)(Header);
+export default Header;

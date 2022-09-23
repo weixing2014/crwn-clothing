@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './CartDropdown.component.scss';
 import CustomButton from '../CustomButton/CustomButton.component';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
 import CartItem from '../CartItem/CartItem.component';
-import { toggleCartVisibility } from '../../redux/cart/cart.actions';
+import { CartContext } from '../../context/cart.context';
 
-function CartDropdown({ cartItems, history, toggleCartVisibility }) {
+function CartDropdown({ history }) {
+  const { cartItems, setIsCartOpen, isCartOpen } = useContext(CartContext)
   return (
     <div className="cart-dropdown">
       <div className="cart-items">
@@ -16,7 +16,7 @@ function CartDropdown({ cartItems, history, toggleCartVisibility }) {
       </div>
       <CustomButton
         onClick={() => {
-          toggleCartVisibility();
+          setIsCartOpen(!isCartOpen);
           history.push('/checkout');
         }}
       >
@@ -26,8 +26,4 @@ function CartDropdown({ cartItems, history, toggleCartVisibility }) {
   );
 }
 
-export default withRouter(
-  connect((state) => ({ cartItems: state.cart.cartItems }), {
-    toggleCartVisibility,
-  })(CartDropdown),
-);
+export default withRouter(CartDropdown);
