@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { connect } from 'react-redux';
 import './header.styles.scss';
 import { Link } from 'react-router-dom';
-import { ReactComponent as Logo } from '../../assets/crown.svg';
+import { ReactComponent as Logo } from '../../assets/homemade-food.svg';
 import { auth } from '../../firebase/firebase.utils';
 import CartIcon from '../CartIcon/CartIcon.component';
 import CartDropdown from '../CartDropdown/CartDropdown.component';
@@ -19,9 +19,12 @@ function Header() {
 
   return (
     <div className='header'>
-      <Link className='logo-container' to='/'>
-        <Logo className='logo' />
-      </Link>
+      <div className='logo-and-name'>
+        <Link className='logo-container' to='/'>
+          <Logo className='logo' />
+        </Link>
+        <div>Nolan Foody</div>
+      </div>
       <div className='options'>
         <Link className='option' to='/shop'>
           SHOP

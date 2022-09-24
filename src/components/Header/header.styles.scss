@@ -7,13 +7,19 @@
   margin-bottom: 25px;
   position: relative;
 
-  .logo-container {
-    height: 100%;
-    width: 70px;
-    padding: 25px;
+  .logo-and-name {
     display: flex;
-    justify-content: center;
     align-items: center;
+    font-size: 50px;
+
+    .logo-container {
+      height: 100%;
+      width: 150px;
+      padding: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 
   .options {
