@@ -5,10 +5,10 @@ import { ProductContext } from '../../context/products.context';
 
 const ShopPage = () => {
   const { products } = useContext(ProductContext);
+
   return (
     <div className='shop-page'>
-      {products
-        .filter((_, idx) => idx < 4)
+        {products
         .map(({ id, ...otherProps }) => (
           <CollectionPreview key={id} {...otherProps} />
         ))}

@@ -11,6 +11,36 @@ const config = {
   appId: '1:963817924716:web:a20863fc9ceab2063ed049',
 };
 
+firebase.initializeApp(config);
+export const auth = firebase.auth();
+export const firestore = firebase.firestore();
+
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+  const batch = firestore.batch();
+  const collectionRef = firestore.collection(collectionKey);
+
+  objectsToAdd.forEach(object => {
+    const docRef = collectionRef.doc(object.title.toLowerCase());
+    batch.set(docRef, object);
+  });
+
+  await batch.commit();
+  console.log('done');
+};
+
+export const getCategoriesAndDocuments = async () => {
+  const collectionRef = firestore.collection('categories');
+  const querySnapshot = await collectionRef.get();
+  const docs = querySnapshot.docs;
+
+  const categoryMap =
+    docs.reduce((acc, docSnapshot) => {
+      return [docSnapshot.data(), ...acc];
+    }, []);
+
+  return categoryMap;
+};
+
 export const getOrCreateUserProfileDocument = async (userAuth, additionalData = {}) => {
   if (!userAuth) return;
   const userRef = firestore.doc(`users/${userAuth.uid}`);
@@ -34,11 +64,6 @@ export const getOrCreateUserProfileDocument = async (userAuth, additionalData = 
 
   return userRef;
 };
-
-firebase.initializeApp(config);
-
-export const auth = firebase.auth();
-export const firestore = firebase.firestore();
 
 const provider = new firebase.auth.GoogleAuthProvider();
 provider.setCustomParameters({
