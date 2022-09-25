@@ -25,6 +25,7 @@ const SignInForm = () => {
 
   const signInWithGoogle = async () => {
     await signInWithGooglePopup();
+    window.location.href = '/';
   };
 
   const handleSubmit = async (event) => {
