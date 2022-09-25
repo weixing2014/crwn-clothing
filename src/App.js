@@ -1,57 +1,21 @@
-import React, { useContext, useEffect } from 'react';
-import './App.css';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import HomePage from './pages/Homepage/Homepage.component';
-import ShopPage from './pages/Shop/Shop.component';
-import Header from './components/Header/header.component';
-import SignInAndSignUpPage from './pages/SignInAndSignUp/SignInAndSignUp.component';
-import { auth, getOrCreateUserProfileDocument } from './firebase/firebase.utils';
-import CheckoutPage from './pages/Checkout/Checkout.component';
-import { UserContext } from './context/user.context';
+import { Routes, Route } from 'react-router-dom';
+
+import Home from './routes/home/home.component';
+import Navigation from './routes/navigation/navigation.component';
+import Authentication from './routes/authentication/authentication.component';
+import Shop from './routes/shop/shop.component';
+import Checkout from './routes/checkout/checkout.component';
 
 const App = () => {
-  const { currentUser, setCurrentUser } = useContext(UserContext);
-  let unsubscribeFromAuth = null;
-
-  useEffect(() => {
-    unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
-      if (userAuth) {
-        const userRef = await getOrCreateUserProfileDocument(userAuth);
-
-        userRef.onSnapshot((snapshot) => {
-          setCurrentUser({
-            id: snapshot.id,
-            ...snapshot.data(),
-          });
-        });
-      } else {
-        setCurrentUser(userAuth);
-      }
-    });
-
-    return () => unsubscribeFromAuth();
-  }, []);
-
   return (
-    <div className='App'>
-      <Header />
-      <Switch>
-        <Route exact path='/' component={HomePage} />
-        <Route exact path='/shop' component={ShopPage} />
-        <Route exact path='/checkout' component={CheckoutPage} />
-        <Route
-          exact
-          path='/signin'
-          render={() =>
-            currentUser ? (
-              <Redirect to='/' />
-            ) : (
-              <SignInAndSignUpPage />
-            )
-          }
-        />
-      </Switch>
-    </div>
+    <Routes>
+      <Route path='/' element={<Navigation />}>
+        <Route index element={<Home />} />
+        <Route path='shop/*' element={<Shop />} />
+        <Route path='auth' element={<Authentication />} />
+        <Route path='checkout' element={<Checkout />} />
+      </Route>
+    </Routes>
   );
 };
 
