@@ -19,6 +19,7 @@ import {
   query,
   getDocs,
 } from 'firebase/firestore';
+import { updateDoc } from '@firebase/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBrcwJpTZdDD_toNqnAVEfTxrJpwld-mK0',
@@ -40,8 +41,6 @@ googleProvider.setCustomParameters({
 export const auth = getAuth();
 export const signInWithGooglePopup = () =>
   signInWithPopup(auth, googleProvider);
-export const signInWithGoogleRedirect = () =>
-  signInWithRedirect(auth, googleProvider);
 
 export const db = getFirestore();
 
@@ -97,6 +96,43 @@ export const createUserDocumentFromAuth = async (
   }
 
   return userDocRef;
+};
+
+export const createOrUpdateUserCart = async (
+  currentUser,
+  cart = {}
+) => {
+  if (!currentUser) return;
+
+  const cartDocRef = doc(db, 'carts', currentUser.uid);
+
+  const userCartDoc = await getDoc(cartDocRef);
+
+  if (!userCartDoc.exists()) {
+    const createdAt = new Date();
+
+    try {
+      await setDoc(userCartDoc, {
+        cart,
+        createdAt
+      });
+    } catch (error) {
+      console.log('error creating the user', error.message);
+    }
+  } else {
+    const createdAt = new Date();
+
+    try {
+      await updateDoc(userCartDoc, {
+        cart,
+        createdAt
+      });
+    } catch (error) {
+      console.log('error updating the user', error.message);
+    }
+  }
+
+  return userCartDoc;
 };
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
