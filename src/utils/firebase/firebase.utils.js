@@ -47,7 +47,7 @@ export const db = getFirestore();
 export const addCollectionAndDocuments = async (
   collectionKey,
   objectsToAdd,
-  field
+  field,
 ) => {
   const collectionRef = collection(db, collectionKey);
   const batch = writeBatch(db);
@@ -61,6 +61,20 @@ export const addCollectionAndDocuments = async (
   console.log('done');
 };
 
+export const getUserCartItems = async (currentUser) => {
+  if (!currentUser) return [];
+
+  const docRef = doc(db, 'carts', currentUser.uid);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    console.log('User cart data:', docSnap.data());
+    return docSnap.data().cart;
+  }
+
+  return [];
+};
+
 export const getCategoriesAndDocuments = async () => {
   const collectionRef = collection(db, 'categories');
   const q = query(collectionRef);
@@ -71,7 +85,7 @@ export const getCategoriesAndDocuments = async () => {
 
 export const createUserDocumentFromAuth = async (
   userAuth,
-  additionalInformation = {}
+  additionalInformation = {},
 ) => {
   if (!userAuth) return;
 
@@ -100,21 +114,21 @@ export const createUserDocumentFromAuth = async (
 
 export const createOrUpdateUserCart = async (
   currentUser,
-  cart = {}
+  cartItems = [],
 ) => {
   if (!currentUser) return;
 
   const cartDocRef = doc(db, 'carts', currentUser.uid);
 
-  const userCartDoc = await getDoc(cartDocRef);
+  const userCartSnapshot = await getDoc(cartDocRef);
 
-  if (!userCartDoc.exists()) {
+  if (!userCartSnapshot.exists()) {
     const createdAt = new Date();
 
     try {
-      await setDoc(userCartDoc, {
-        cart,
-        createdAt
+      await setDoc(cartDocRef, {
+        cart: cartItems,
+        createdAt,
       });
     } catch (error) {
       console.log('error creating the user', error.message);
@@ -123,16 +137,16 @@ export const createOrUpdateUserCart = async (
     const createdAt = new Date();
 
     try {
-      await updateDoc(userCartDoc, {
-        cart,
-        createdAt
+      await updateDoc(cartDocRef, {
+        cart: cartItems,
+        createdAt,
       });
     } catch (error) {
       console.log('error updating the user', error.message);
     }
   }
 
-  return userCartDoc;
+  return userCartSnapshot;
 };
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {

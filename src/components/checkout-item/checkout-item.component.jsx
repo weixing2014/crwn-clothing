@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   clearItemFromCart,
   addItemToCart,
-  removeItemFromCart,
+  removeItemFromCart, addItemToCartAsync,
 } from '../../store/cart/cart.action';
 import { selectCartItems } from '../../store/cart/cart.selector';
 
@@ -16,15 +16,17 @@ import {
   Value,
   RemoveButton,
 } from './checkout-item.styles';
+import { selectCurrentUser } from '../../store/user/user.selector';
 
 const CheckoutItem = ({ cartItem }) => {
   const { name, imageUrl, price, quantity } = cartItem;
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
+  const currentUser = useSelector(selectCurrentUser);
 
   const clearItemHandler = () =>
     dispatch(clearItemFromCart(cartItems, cartItem));
-  const addItemHandler = () => dispatch(addItemToCart(cartItems, cartItem));
+  const addItemHandler = () => dispatch(addItemToCartAsync(currentUser, cartItems, cartItem));
   const removeItemHandler = () =>
     dispatch(removeItemFromCart(cartItems, cartItem));
 

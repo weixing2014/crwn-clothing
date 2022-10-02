@@ -1,4 +1,6 @@
 import { CART_ACTION_TYPES } from './cart.types';
+import { getUserCartItems } from '../../utils/firebase/firebase.utils';
+import { createAction } from '../../utils/reducer/reducer.utils';
 
 const CART_INITIAL_STATE = {
   isCartOpen: false,
@@ -22,4 +24,9 @@ export const cartReducer = (state = CART_INITIAL_STATE, action = {}) => {
     default:
       return state;
   }
+};
+
+export const setUserCartItemsAsync = (currentUser) => async (dispatch) => {
+  const cartItems = await getUserCartItems(currentUser);
+  return dispatch(createAction(CART_ACTION_TYPES.SET_CART_ITEMS, cartItems));
 };

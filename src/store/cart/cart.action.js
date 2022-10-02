@@ -1,6 +1,7 @@
 import { createAction } from '../../utils/reducer/reducer.utils';
 import { CART_ACTION_TYPES } from './cart.types';
-import { createOrUpdateUserCart } from '../../utils/firebase/firebase.utils';
+import { createOrUpdateUserCart, getCategoriesAndDocuments } from '../../utils/firebase/firebase.utils';
+import { fetchCategoriesFailed, fetchCategoriesStart, fetchCategoriesSuccess } from '../categories/category.action';
 
 const addCartItem = (cartItems, productToAdd) => {
   const existingCartItem = cartItems.find(
@@ -43,6 +44,14 @@ const clearCartItem = (cartItems, cartItemToClear) =>
 export const addItemToCart = (cartItems, productToAdd) => {
   const newCartItems = addCartItem(cartItems, productToAdd);
   return createAction(CART_ACTION_TYPES.SET_CART_ITEMS, newCartItems);
+};
+
+export const addItemToCartAsync = (currentUser, cartItems, productToAdd) => async (dispatch) => {
+  const newCartItems = addCartItem(cartItems, productToAdd);
+  if (currentUser) {
+    createOrUpdateUserCart(currentUser, newCartItems);
+  }
+  return dispatch(createAction(CART_ACTION_TYPES.SET_CART_ITEMS, newCartItems));
 };
 
 export const removeItemFromCart = (cartItems, cartItemToRemove) => {
