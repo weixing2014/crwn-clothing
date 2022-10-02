@@ -1,6 +1,4 @@
 import { CART_ACTION_TYPES } from './cart.types';
-import { getUserCartItems } from '../../utils/firebase/firebase.utils';
-import { createAction } from '../../utils/reducer/reducer.utils';
 
 const CART_INITIAL_STATE = {
   isCartOpen: false,

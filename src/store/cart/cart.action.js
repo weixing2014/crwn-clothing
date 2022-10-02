@@ -2,10 +2,8 @@ import { createAction } from '../../utils/reducer/reducer.utils';
 import { CART_ACTION_TYPES } from './cart.types';
 import {
   createOrUpdateUserCart,
-  getCategoriesAndDocuments,
   getUserCartItems,
 } from '../../utils/firebase/firebase.utils';
-import { fetchCategoriesFailed, fetchCategoriesStart, fetchCategoriesSuccess } from '../categories/category.action';
 
 const addCartItem = (cartItems, productToAdd) => {
   const existingCartItem = cartItems.find(

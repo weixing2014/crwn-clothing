@@ -24,7 +24,9 @@ const App = () => {
         createUserDocumentFromAuth(user);
       }
       dispatch(setCurrentUser(user));
-      dispatch(getUserCartItemsAsync(user));
+      if (user) {
+        dispatch(getUserCartItemsAsync(user));
+      }
     });
 
     return unsubscribe;
