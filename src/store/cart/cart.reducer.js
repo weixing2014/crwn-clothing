@@ -25,8 +25,3 @@ export const cartReducer = (state = CART_INITIAL_STATE, action = {}) => {
       return state;
   }
 };
-
-export const setUserCartItemsAsync = (currentUser) => async (dispatch) => {
-  const cartItems = await getUserCartItems(currentUser);
-  return dispatch(createAction(CART_ACTION_TYPES.SET_CART_ITEMS, cartItems));
-};

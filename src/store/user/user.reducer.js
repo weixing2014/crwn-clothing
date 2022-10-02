@@ -1,6 +1,4 @@
 import { USER_ACTION_TYPES } from './user.types';
-import { getCategoriesAndDocuments, getUserCartItems } from '../../utils/firebase/firebase.utils';
-import { fetchCategoriesFailed, fetchCategoriesStart, fetchCategoriesSuccess } from '../categories/category.action';
 
 const INITIAL_STATE = {
   currentUser: null,

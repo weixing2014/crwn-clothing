@@ -1,6 +1,10 @@
 import { createAction } from '../../utils/reducer/reducer.utils';
 import { CART_ACTION_TYPES } from './cart.types';
-import { createOrUpdateUserCart, getCategoriesAndDocuments } from '../../utils/firebase/firebase.utils';
+import {
+  createOrUpdateUserCart,
+  getCategoriesAndDocuments,
+  getUserCartItems,
+} from '../../utils/firebase/firebase.utils';
 import { fetchCategoriesFailed, fetchCategoriesStart, fetchCategoriesSuccess } from '../categories/category.action';
 
 const addCartItem = (cartItems, productToAdd) => {
@@ -47,11 +51,14 @@ export const addItemToCart = (cartItems, productToAdd) => {
 };
 
 export const addItemToCartAsync = (currentUser, cartItems, productToAdd) => async (dispatch) => {
-  const newCartItems = addCartItem(cartItems, productToAdd);
+  return setUserCartItemsAsync(dispatch, currentUser, addCartItem(cartItems, productToAdd));
+};
+
+const setUserCartItemsAsync = (dispatch, currentUser, cartItems) => {
   if (currentUser) {
-    createOrUpdateUserCart(currentUser, newCartItems);
+    createOrUpdateUserCart(currentUser, cartItems);
   }
-  return dispatch(createAction(CART_ACTION_TYPES.SET_CART_ITEMS, newCartItems));
+  return dispatch(createAction(CART_ACTION_TYPES.SET_CART_ITEMS, cartItems));
 };
 
 export const removeItemFromCart = (cartItems, cartItemToRemove) => {
@@ -59,15 +66,23 @@ export const removeItemFromCart = (cartItems, cartItemToRemove) => {
   return createAction(CART_ACTION_TYPES.SET_CART_ITEMS, newCartItems);
 };
 
+export const removeItemFromCartAsync = (currentUser, cartItems, cartItemToRemove) => async (dispatch) => {
+  return setUserCartItemsAsync(dispatch, currentUser, removeCartItem(cartItems, cartItemToRemove));
+};
+
 export const clearItemFromCart = (cartItems, cartItemToClear) => {
   const newCartItems = clearCartItem(cartItems, cartItemToClear);
   return createAction(CART_ACTION_TYPES.SET_CART_ITEMS, newCartItems);
 };
 
+export const clearItemFromCartAsync = (currentUser, cartItems, cartItemToClear) => async (dispatch) => {
+  return setUserCartItemsAsync(dispatch, currentUser, clearCartItem(cartItems, cartItemToClear));
+};
+
 export const setIsCartOpen = (boolean) =>
   createAction(CART_ACTION_TYPES.SET_IS_CART_OPEN, boolean);
 
-export const setCartItems = (currentUser, cartItems) => async dispatch => {
-  await createOrUpdateUserCart(currentUser, cartItems);
-  dispatch(createAction(CART_ACTION_TYPES.SET_CART_ITEMS, cartItems));
+export const getUserCartItemsAsync = (currentUser) => async (dispatch) => {
+  const cartItems = await getUserCartItems(currentUser);
+  return dispatch(createAction(CART_ACTION_TYPES.SET_CART_ITEMS, cartItems));
 };
