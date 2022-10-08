@@ -59,8 +59,10 @@ const PaymentForm = () => {
         <Row className='mb-3'>
           <CardElement />
         </Row>
-        <Button size='sm' type='submit' disabled={isProcessingPayment}
-                variant='outline-primary'>{isProcessingPayment ? 'Loading…' : 'Pay Now'}</Button>
+        <Row className='d-flex justify-content-end'>
+          <Button size='sm' styles={{ width: '100px'}} type='submit' disabled={isProcessingPayment}
+                  variant='outline-primary'>{isProcessingPayment ? 'Loading…' : 'Pay Now'}</Button>
+        </Row>
       </Form>
     </div>
   );
